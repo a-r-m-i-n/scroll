@@ -1,0 +1,20 @@
+{
+    "name": "t3/scroll",
+    "description": "Prevents scroll jumps in TYPO3 CMS backend.",
+    "type": "typo3-cms-extension",
+    "license": "proprietary",
+    "require": {
+        "php": "^7.3",
+        "typo3/cms-core": "^10.4 || ^11.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "T3\\Scroll\\": "Classes"
+        }
+    },
+    "extra": {
+        "typo3/cms": {
+            "extension-key": "scroll"
+        }
+    }
+}

@@ -1,0 +1,15 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+
+    T3\Scroll\:
+        resource: '../Classes/*'
+        exclude: '../Classes/Domain/Model/*'
+
+    T3\Scroll\EventListener\RecordListScrollHelperEventListener:
+        tags:
+            -   name: event.listener
+                identifier: 'ext-scroll/record-list-table-actions'
+                event: TYPO3\CMS\Recordlist\Event\ModifyRecordListTableActionsEvent
