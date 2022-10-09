@@ -1,6 +1,7 @@
-<?php declare(strict_types = 1);
-namespace T3\Scroll\EventListener;
+<?php
+declare(strict_types = 1);
 
+namespace T3\Scroll\EventListener;
 
 use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -17,16 +18,18 @@ class RecordListScrollHelperEventListener
 /* Prevents jumping after reload*/
 location.hash = '';
 
-const uid = '$uid';
-const module = document.querySelector('body > .module');
+const tx_scroll = {
+    uid: '$uid',
+    module: document.querySelector('body > .module')
+};
 
 window.addEventListener('unload', function() {
-    sessionStorage.setItem('scroll-recordlist-' + uid, module.scrollTop);
+    sessionStorage.setItem('ext-scroll-recordlist-' + tx_scroll.uid, tx_scroll.module.scrollTop);
 });
 document.addEventListener('DOMContentLoaded', function() {
-    const pos = sessionStorage.getItem('scroll-recordlist-' + uid);
+    const pos = sessionStorage.getItem('ext-scroll-recordlist-' + tx_scroll.uid);
     if (pos) {
-        module.scrollTo(0, pos);
+        tx_scroll.module.scrollTo(0, pos);
     }
 });
 JS;

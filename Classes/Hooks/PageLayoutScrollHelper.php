@@ -1,6 +1,7 @@
-<?php declare(strict_types = 1);
-namespace T3\Scroll\Hooks;
+<?php
+declare(strict_types = 1);
 
+namespace T3\Scroll\Hooks;
 
 use TYPO3\CMS\Backend\View\PageLayoutView;
 use TYPO3\CMS\Core\Page\PageRenderer;
@@ -24,15 +25,17 @@ class PageLayoutScrollHelper implements \TYPO3\CMS\Backend\View\PageLayoutViewDr
 /* Prevents jumping after reload*/
 location.hash = '';
 
-const table = '$table';
-const uid = '$uid';
-const module = document.querySelector('body > .module');
+const tx_scroll = {
+   table: '$table',
+   uid: '$uid',
+   module: document.querySelector('body > .module')
+};
 
 window.addEventListener('unload', function() {
-    sessionStorage.setItem('scroll-' + table + '-' + uid, module.scrollTop);
+    sessionStorage.setItem('scroll-' + tx_scroll.table + '-' + tx_scroll.uid, tx_scroll.module.scrollTop);
 });
 document.addEventListener('DOMContentLoaded', function() {
-    const pos = sessionStorage.getItem('scroll-' + table + '-' + uid);
+    const pos = sessionStorage.getItem('scroll-' + table + '-' + tx_scroll.uid);
     if (pos) {
         module.scrollTo(0, pos);
     }
