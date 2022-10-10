@@ -8,7 +8,7 @@ Currently, it works in the page module as well as in the list view.
 
 ## Installation
 
-Just install the extension, like any other TYPO3 CMS extension.
+Just install the extension, like any other TYPO3 CMS extension. TYPO3 10 and 11 are supported.
 
 Link to TER: https://extensions.typo3.org/extension/scroll
 

@@ -3,11 +3,17 @@ declare(strict_types = 1);
 
 namespace T3\Scroll\Hooks;
 
+/*  | This extension is made with love for TYPO3 CMS and is licensed
+ *  | under GNU General Public License.
+ *  |
+ *  | (c) 2022 Armin Vieweg <armin@v.ieweg.de>
+ */
 use TYPO3\CMS\Backend\View\PageLayoutView;
+use TYPO3\CMS\Backend\View\PageLayoutViewDrawFooterHookInterface;
 use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-class PageLayoutScrollHelper implements \TYPO3\CMS\Backend\View\PageLayoutViewDrawFooterHookInterface
+class PageLayoutScrollHelper implements PageLayoutViewDrawFooterHookInterface
 {
     /**
      * @param PageLayoutView $parentObject
@@ -19,30 +25,18 @@ class PageLayoutScrollHelper implements \TYPO3\CMS\Backend\View\PageLayoutViewDr
     {
         $table = 'pages';
         $uid = $row['pid'];
+        $isV10 = !\T3\Scroll\Compatibility::isVersion('11') ? 'true' : 'false';
 
-        // JavaScript Code
-        $js = <<<JS
-/* Prevents jumping after reload*/
-location.hash = '';
-
-const tx_scroll = {
-   table: '$table',
-   uid: '$uid',
-   module: document.querySelector('body > .module')
-};
-
-window.addEventListener('unload', function() {
-    sessionStorage.setItem('scroll-' + tx_scroll.table + '-' + tx_scroll.uid, tx_scroll.module.scrollTop);
-});
-document.addEventListener('DOMContentLoaded', function() {
-    const pos = sessionStorage.getItem('scroll-' + table + '-' + tx_scroll.uid);
-    if (pos) {
-        module.scrollTo(0, pos);
-    }
-});
-JS;
-        /** @var PageRenderer $pageRenderer */
         $pageRenderer = GeneralUtility::makeInstance(PageRenderer::class);
-        $pageRenderer->addJsFooterInlineCode('ext-scroll', $js);
+        $pageRenderer->addRequireJsConfiguration([
+            'paths' => [
+                'T3/Scroll/PageModule' => '../../../typo3conf/ext/scroll/Resources/Public/JavaScript/ScrollPageModule'
+            ]
+        ]);
+
+        $pageRenderer->loadRequireJsModule(
+            'T3/Scroll/PageModule',
+            'function(ScrollPageModule) { ScrollPageModule.init(' . $uid . ', "' . $table . '", ' . $isV10 . ') }'
+        );
     }
 }
