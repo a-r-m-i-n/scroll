@@ -2,10 +2,10 @@
 
 $EM_CONF[$_EXTKEY] = array (
 	'title' => 'Scroll',
-	'description' => 'Prevents scroll jumps in TYPO3 CMS backend',
+	'description' => 'Prevents scroll jumps in TYPO3 CMS backend.',
 	'category' => 'backend',
-	'version' => '0.0.0-dev',
-	'state' => 'beta',
+	'version' => '1.0.0',
+	'state' => 'stable',
 	'constraints' =>
 	[
 		'depends' =>
