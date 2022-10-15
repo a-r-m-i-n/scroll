@@ -1,9 +1,10 @@
 # EXT:scroll
 
+<img src="Resources/Public/Icons/Extension.svg" width="64" alt="EXT:scroll extension icon">
+
 TYPO3 CMS extension to prevent scroll jumps in the backend. 
 
 Currently, it works in the page module as well as in the list view.
-
 
 
 ## Installation
