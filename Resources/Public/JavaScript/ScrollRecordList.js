@@ -11,17 +11,19 @@ define([], function() {
             });
             const pos = sessionStorage.getItem('ext-scroll-recordlist-' + uid);
             if (pos) {
-                tx_scroll_module.scrollTo(0, pos);
+                window.addEventListener('load', function() {
+                    tx_scroll_module.scrollTo(0, pos);
 
-                // This happens, when the clipboard in V11 (loaded via AJAX) is appearing
-                if (pos > tx_scroll_module.scrollTop) {
-                    var timer = setInterval(function(){
-                        tx_scroll_module.scrollTo(0, pos);
-                        if (pos == tx_scroll_module.scrollTop) {
-                            clearInterval(timer);
-                        }
-                    });
-                }
+                    // This happens, when the clipboard in V11 (loaded via AJAX) is appearing
+                    if (pos > tx_scroll_module.scrollTop) {
+                        var timer = setInterval(function(){
+                            tx_scroll_module.scrollTo(0, pos);
+                            if (pos == tx_scroll_module.scrollTop) {
+                                clearInterval(timer);
+                            }
+                        });
+                    }
+                });
             }
         }
     }
