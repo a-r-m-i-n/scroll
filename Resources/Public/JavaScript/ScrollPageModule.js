@@ -12,9 +12,12 @@ define([], function() {
 
             const pos = sessionStorage.getItem('scroll-' + table + '-' + uid);
             if (pos) {
-                window.addEventListener('load', function() {
-                    tx_scroll_module.scrollTo(0, pos);
-                });
+                tx_scroll_module.scrollTo(0, pos);
+                if (pos != tx_scroll_module.scrollTop) {
+                    window.addEventListener('load', function() {
+                        tx_scroll_module.scrollTo(0, pos);
+                    });
+                }
             }
         }
     }
