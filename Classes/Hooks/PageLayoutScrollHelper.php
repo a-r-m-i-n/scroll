@@ -23,7 +23,6 @@ class PageLayoutScrollHelper implements PageLayoutViewDrawFooterHookInterface
      */
     public function preProcess(PageLayoutView &$parentObject, &$info, array &$row)
     {
-        $table = 'pages';
         $uid = $row['pid'];
         $isV10 = !\T3\Scroll\Compatibility::isVersion('11') ? 'true' : 'false';
 
@@ -36,7 +35,7 @@ class PageLayoutScrollHelper implements PageLayoutViewDrawFooterHookInterface
 
         $pageRenderer->loadRequireJsModule(
             'T3/Scroll/PageModule',
-            'function(ScrollPageModule) { ScrollPageModule.init(' . $uid . ', "' . $table . '", ' . $isV10 . ') }'
+            'function(ScrollPageModule) { ScrollPageModule.init(' . $uid . ', ' . $isV10 . ') }'
         );
     }
 }
