@@ -8,8 +8,13 @@ services:
         resource: '../Classes/*'
         exclude: '../Classes/Domain/Model/*'
 
+    T3\Scroll\EventListener\ModifyPageModuleContentEventListener:
+        tags:
+            -   name: event.listener
+                identifier: 'ext-scroll/modify-page-module-content'
+
     T3\Scroll\EventListener\RecordListScrollHelperEventListener:
         tags:
             -   name: event.listener
                 identifier: 'ext-scroll/record-list-table-actions'
-                event: TYPO3\CMS\Recordlist\Event\ModifyRecordListTableActionsEvent
+                event: TYPO3\CMS\Backend\RecordList\Event\ModifyRecordListTableActionsEvent
