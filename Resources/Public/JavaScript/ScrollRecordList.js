@@ -1,16 +1,22 @@
 define([], function() {
     // Only used in v10. V11 uses the "RecordListScrollHelperEventListener" instead
     return {
-        init: function(uid, isV10) {
+        init: function(uid, table, isV10) {
             const tx_scroll_module = document.querySelector('body > .module' + (isV10 ? ' > .module-body' : ''));
 
             location.hash = '';
-
+            if (table !== '') {
+                table = table + '-';
+            }
+            const storageKey = 'ext-scroll-recordlist-' + table + uid;
             window.addEventListener('unload', function() {
-                sessionStorage.setItem('ext-scroll-recordlist-' + uid, tx_scroll_module.scrollTop);
+                if (tx_scroll_module.scrollTop > 0) {
+                    sessionStorage.setItem(storageKey, tx_scroll_module.scrollTop);
+                }
             });
-            const pos = sessionStorage.getItem('ext-scroll-recordlist-' + uid);
+            const pos = sessionStorage.getItem(storageKey);
             if (pos) {
+                sessionStorage.removeItem(storageKey);
                 tx_scroll_module.scrollTo(0, pos);
                 if (pos != tx_scroll_module.scrollTop) {
                     window.addEventListener('load', function() {

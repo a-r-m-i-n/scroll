@@ -29,9 +29,10 @@ class RecordListScrollHelperEventListener
         ]);
 
         $uid = (int)($_GET['id'] ?? 0);
+        $table = $_GET['table'] ?? '';
         $pageRenderer->loadRequireJsModule(
             'T3/Scroll/RecordList',
-            'function(ScrollRecordList) { ScrollRecordList.init(' . $uid . ', false) }'
+            'function(ScrollRecordList) { ScrollRecordList.init(' . $uid . ', "' . $table . '", false) }'
         );
     }
 }
