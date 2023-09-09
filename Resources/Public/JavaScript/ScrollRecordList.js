@@ -4,13 +4,24 @@ const tx_scroll_module = document.querySelector('body > .module');
 window.location.hash = '';
 
 const uid = new URL(window.location.href).searchParams.get('id') ?? '0';
+let table = new URL(window.location.href).searchParams.getAll('table').pop();
 
+if (table === undefined) {
+    table = '';
+}
+if (typeof(table) === 'string' && table !== '') {
+    table = table + '-';
+}
+const storageKey = 'ext-scroll-recordlist-' + table + uid;
 window.addEventListener('unload', function () {
-    sessionStorage.setItem('ext-scroll-recordlist-' + uid, tx_scroll_module.scrollTop);
+    if (tx_scroll_module.scrollTop > 0) {
+        sessionStorage.setItem(storageKey, tx_scroll_module.scrollTop);
+    }
 });
 
-const pos = sessionStorage.getItem('ext-scroll-recordlist-' + uid);
+const pos = sessionStorage.getItem(storageKey);
 if (pos) {
+    sessionStorage.removeItem(storageKey);
     tx_scroll_module.scrollTo(0, pos);
     if (pos != tx_scroll_module.scrollTop) {
         tx_scroll_module.scrollTo(0, pos);
