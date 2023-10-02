@@ -30,9 +30,10 @@ class RecordListScrollHelperEventListener
 
         $uid = (int)($_GET['id'] ?? 0);
         $table = $_GET['table'] ?? '';
+        $searchField = GeneralUtility::_GP('search_field') ?? '';
         $pageRenderer->loadRequireJsModule(
             'T3/Scroll/RecordList',
-            'function(ScrollRecordList) { ScrollRecordList.init(' . $uid . ', "' . $table . '", false) }'
+            'function(ScrollRecordList) { ScrollRecordList.init(' . $uid . ', "' . $table . '", "' . $searchField . '", false) }'
         );
     }
 }

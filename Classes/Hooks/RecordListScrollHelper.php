@@ -34,9 +34,11 @@ class RecordListScrollHelper implements RecordListHookInterface
         ]);
 
         $uid = (int)($_GET['id'] ?? 0);
+        $tableName = $_GET['table'] ?? '';
+        $searchField = GeneralUtility::_GP('search_field') ?? '';
         $pageRenderer->loadRequireJsModule(
             'T3/Scroll/RecordList',
-            'function(ScrollRecordList) { ScrollRecordList.init(' . $uid . ', true) }'
+            'function(ScrollRecordList) { ScrollRecordList.init(' . $uid . ', "' . $tableName . '", "' . $searchField . '", true) }'
         );
 
         return $cells;

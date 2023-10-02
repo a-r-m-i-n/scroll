@@ -1,12 +1,15 @@
 define([], function() {
     // Only used in v10. V11 uses the "RecordListScrollHelperEventListener" instead
     return {
-        init: function(uid, table, isV10) {
+        init: function(uid, table, searchField, isV10) {
             const tx_scroll_module = document.querySelector('body > .module' + (isV10 ? ' > .module-body' : ''));
 
             location.hash = '';
             if (table !== '') {
                 table = table + '-';
+            }
+            if (searchField !== '') {
+                table = 'search-' + searchField + '-' + table;
             }
             const storageKey = 'ext-scroll-recordlist-' + table + uid;
             window.addEventListener('unload', function() {
