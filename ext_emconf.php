@@ -6,7 +6,7 @@ $EM_CONF[$_EXTKEY] = array (
 	'category' => 'backend',
     'author' => 'Armin Vieweg',
     'author_email' => 'armin@v.ieweg.de',
-	'version' => '1.0.3',
+	'version' => '1.0.4',
 	'state' => 'stable',
 	'constraints' =>
 	[
