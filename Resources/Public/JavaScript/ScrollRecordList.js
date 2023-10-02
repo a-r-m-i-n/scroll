@@ -5,12 +5,22 @@ window.location.hash = '';
 
 const uid = new URL(window.location.href).searchParams.get('id') ?? '0';
 let table = new URL(window.location.href).searchParams.getAll('table').pop();
+let searchTerm = new URL(window.location.href).searchParams.get('searchTerm') ?? '';
 
 if (table === undefined) {
     table = '';
 }
 if (typeof(table) === 'string' && table !== '') {
     table = table + '-';
+}
+if (searchTerm === '') {
+    const searchTermInput = document.getElementById('recordsearchbox-searchterm');
+    if (searchTermInput && searchTermInput.value !== '') {
+        searchTerm = searchTermInput.value;
+    }
+}
+if (searchTerm !== '') {
+    table = 'search-' + searchTerm + '-' + table;
 }
 const storageKey = 'ext-scroll-recordlist-' + table + uid;
 window.addEventListener('unload', function () {
