@@ -27,7 +27,7 @@ if (searchTerm !== '') {
     table = 'search-' + searchTerm + '-' + table;
 }
 const storageKey = 'ext-scroll-recordlist-' + table + uid;
-window.addEventListener('unload', function () {
+window.addEventListener('pagehide', function () {
     if (tx_scroll_module.scrollTop > 0) {
         sessionStorage.setItem(storageKey, tx_scroll_module.scrollTop);
     }

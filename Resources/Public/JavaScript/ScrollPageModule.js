@@ -9,7 +9,7 @@ window.location.hash = '';
 
 const uid = new URL(window.location.href).searchParams.get('id') ?? '0';
 
-window.addEventListener('unload', function () {
+window.addEventListener('pagehide', function () {
     sessionStorage.setItem('ext-scroll-pages-' + uid, tx_scroll_module.scrollTop);
 });
 
