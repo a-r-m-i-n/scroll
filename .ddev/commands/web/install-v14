@@ -1,0 +1,42 @@
+#!/bin/bash
+
+VERSION=v14
+
+rm -rf /var/www/html/$VERSION/*
+mkdir -p /var/www/html/$VERSION/
+echo "{}" > /var/www/html/$VERSION/composer.json
+composer config extra.typo3/cms.web-dir public -d /var/www/html/$VERSION
+composer config repositories.$EXTENSION_KEY path ../../$EXTENSION_KEY -d /var/www/html/$VERSION
+composer config --no-plugins allow-plugins.typo3/cms-composer-installers true -d /var/www/html/$VERSION
+composer config --no-plugins allow-plugins.typo3/class-alias-loader true -d /var/www/html/$VERSION
+# t3/cms has no v14 release (yet), require its package list directly
+composer req typo3/minimal:'^14' typo3/cms-cli:'^3.1' typo3/cms-fluid-styled-content:'^14' typo3/cms-rte-ckeditor:'^14' typo3/cms-belog:'^14' typo3/cms-beuser:'^14' typo3/cms-info:'^14' typo3/cms-install:'^14' typo3/cms-lowlevel:'^14' typo3/cms-setup:'^14' typo3/cms-tstemplate:'^14' helhum/typo3-console $PACKAGE_NAME:'*@dev' --no-progress -n -d /var/www/html/$VERSION
+
+cd /var/www/html/$VERSION
+
+mysql -h db -u root -p"root" -e "CREATE DATABASE ${VERSION};"
+
+vendor/bin/typo3 setup -n --dbname=$VERSION --password=$TYPO3_DB_PASSWORD --create-site="https://${VERSION}.scroll.ddev.site" --admin-user-password=$TYPO3_SETUP_ADMIN_PASSWORD
+
+# v14 setup omits db credentials from settings.php when they come from
+# TYPO3_DB_* environment variables; persist them so the cli works, too
+vendor/bin/typo3 configuration:set 'DB/Connections/Default/host' 'db'
+vendor/bin/typo3 configuration:set 'DB/Connections/Default/port' '3306'
+vendor/bin/typo3 configuration:set 'DB/Connections/Default/dbname' "$VERSION"
+vendor/bin/typo3 configuration:set 'DB/Connections/Default/user' "$TYPO3_DB_USERNAME"
+vendor/bin/typo3 configuration:set 'DB/Connections/Default/password' "$TYPO3_DB_PASSWORD"
+
+vendor/bin/typo3 configuration:set 'BE/debug' 1
+vendor/bin/typo3 configuration:set 'FE/debug' 1
+vendor/bin/typo3 configuration:set 'SYS/devIPmask' '*'
+vendor/bin/typo3 configuration:set 'SYS/displayErrors' 1
+vendor/bin/typo3 configuration:set 'SYS/trustedHostsPattern' '.*.*'
+vendor/bin/typo3 configuration:set 'MAIL/transport' 'smtp'
+vendor/bin/typo3 configuration:set 'MAIL/transport_smtp_server' 'localhost:1025'
+vendor/bin/typo3 configuration:set 'MAIL/defaultMailFromAddress' 'admin@example.com'
+vendor/bin/typo3 configuration:set 'GFX/processor' 'ImageMagick'
+vendor/bin/typo3 configuration:set 'GFX/processor_path' '/usr/bin/'
+
+sed -i "/'deprecations'/,/^[[:space:]]*'disabled' => true,/s/'disabled' => true,/'disabled' => false,/" /var/www/html/$VERSION/config/system/settings.php
+
+vendor/bin/typo3 cache:flush

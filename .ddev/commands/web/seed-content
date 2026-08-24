@@ -1,0 +1,32 @@
+#!/bin/bash
+
+## Description: Seed demo content for scroll testing (many content elements) into a TYPO3 instance
+## Usage: seed-content [v12|v13|v14]
+## Example: "ddev seed-content v14"
+
+VERSION=${1:-v14}
+
+if [ ! -d /var/www/html/$VERSION/vendor ]; then
+    echo "Instance $VERSION is not installed yet. Run 'ddev install-$VERSION' first."
+    exit 1
+fi
+
+mysql -h db -u root -p"root" $VERSION <<'SQL'
+INSERT INTO pages (pid, title, slug, doktype, sorting, tstamp, crdate)
+SELECT 1, CONCAT('Scroll Demo ', seq), CONCAT('/scroll-demo-', seq), 1, seq * 256, UNIX_TIMESTAMP(), UNIX_TIMESTAMP()
+FROM seq_1_to_3;
+
+INSERT INTO tt_content (pid, colPos, CType, header, bodytext, sorting, tstamp, crdate)
+SELECT p.uid, 0, 'text',
+       CONCAT('Scroll test element ', seq),
+       CONCAT('<p>Demo content #', seq, ' for testing scroll position restore.</p>'),
+       seq * 32, UNIX_TIMESTAMP(), UNIX_TIMESTAMP()
+FROM seq_1_to_40
+JOIN (SELECT uid FROM pages WHERE deleted = 0) p
+WHERE p.uid = 1 OR p.uid IN (SELECT uid FROM pages WHERE slug LIKE '/scroll-demo-%');
+SQL
+
+cd /var/www/html/$VERSION
+vendor/bin/typo3 cache:flush
+
+echo "Seeded 40 content elements each on the root page and 3 demo subpages ($VERSION)."

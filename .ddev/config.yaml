@@ -2,6 +2,8 @@ name: scroll
 type: php
 docroot: ""
 no_project_mount: true
+# Mutagen cannot sync a project that is not mounted (no_project_mount)
+performance_mode: none
 php_version: "8.4"
 composer_version: "2"
 webserver_type: apache-fpm
@@ -11,5 +13,6 @@ xdebug_enabled: false
 additional_hostnames:
     - v12.scroll
     - v13.scroll
+    - v14.scroll
 additional_fqdns: []
 use_dns_when_possible: true

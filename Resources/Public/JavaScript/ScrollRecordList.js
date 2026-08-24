@@ -3,6 +3,11 @@ if (TYPO3.settings.cache) {
     // v13
     tx_scroll_module = document.querySelector('body > .module > .module-body');
 }
+const tx_scroll_overflowY = tx_scroll_module ? window.getComputedStyle(tx_scroll_module).overflowY : '';
+if (tx_scroll_overflowY !== 'auto' && tx_scroll_overflowY !== 'scroll') {
+    // v14: the module markup does not scroll anymore, the document itself does
+    tx_scroll_module = document.scrollingElement;
+}
 
 /* Prevents jumping after reload*/
 window.location.hash = '';
@@ -27,7 +32,7 @@ if (searchTerm !== '') {
     table = 'search-' + searchTerm + '-' + table;
 }
 const storageKey = 'ext-scroll-recordlist-' + table + uid;
-window.addEventListener('unload', function () {
+window.addEventListener('pagehide', function () {
     if (tx_scroll_module.scrollTop > 0) {
         sessionStorage.setItem(storageKey, tx_scroll_module.scrollTop);
     }
@@ -36,20 +41,22 @@ window.addEventListener('unload', function () {
 const pos = parseInt(sessionStorage.getItem(storageKey));
 if (pos) {
     sessionStorage.removeItem(storageKey);
-    tx_scroll_module.scrollTo(0, pos);
+    tx_scroll_module.scrollTo({top: pos, behavior: 'instant'});
     if (pos !== tx_scroll_module.scrollTop) {
-        tx_scroll_module.scrollTo(0, pos);
+        tx_scroll_module.scrollTo({top: pos, behavior: 'instant'});
         if (pos > tx_scroll_module.scrollTop) {
             let timerIterations = 0;
             const timer = setInterval(function () {
                 ++timerIterations;
-                tx_scroll_module.scrollTo(0, pos);
+                tx_scroll_module.scrollTo({top: pos, behavior: 'instant'});
                 if (pos === tx_scroll_module.scrollTop) {
                     clearInterval(timer);
                 }
             }, 20);
 
-            tx_scroll_module.addEventListener('scroll', function () {
+            // Scroll events of document.scrollingElement fire on window, not on the element itself
+            const scrollEventTarget = tx_scroll_module === document.scrollingElement ? window : tx_scroll_module;
+            scrollEventTarget.addEventListener('scroll', function () {
                 if (timerIterations > 20) {
                     clearInterval(timer);
                 }

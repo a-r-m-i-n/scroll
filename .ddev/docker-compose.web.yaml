@@ -17,7 +17,7 @@ services:
             - TYPO3_INSTALL_SITE_SETUP_TYPE=site
             - TYPO3_INSTALL_WEB_SERVER_CONFIG=apache
 
-            # TYPO3 v13 config
+            # TYPO3 v13/v14 config
             - TYPO3_DB_DRIVER=mysqli
             - TYPO3_DB_USERNAME=root
             - TYPO3_DB_PASSWORD=root
@@ -34,8 +34,11 @@ services:
               consistency: cached
             - v12-data:/var/www/html/v12
             - v13-data:/var/www/html/v13
+            - v14-data:/var/www/html/v14
 volumes:
     v12-data:
         name: "${DDEV_SITENAME}-v12-data"
     v13-data:
         name: "${DDEV_SITENAME}-v13-data"
+    v14-data:
+        name: "${DDEV_SITENAME}-v14-data"
